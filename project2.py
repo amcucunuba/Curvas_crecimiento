@@ -155,4 +155,4 @@ def grafico_crecimiento (df, peso, talla):
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= peso, y= talla, name= "Usuario", mode='lines+markers', line= dict(color= 'black') ))
 
-    return fig 
+    return fig
