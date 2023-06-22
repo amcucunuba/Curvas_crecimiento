@@ -52,14 +52,14 @@ def grafico_crecimiento (df, peso, talla):
                       line=dict(color='red', width=2,) ))
     fig.add_trace(go.Scatter(fillpattern= dict(bgcolor= 'white')))
     fig.update_layout(title='Curva de Crecimiento OMS',
-                   xaxis_title='Edad en meses',
+                   xaxis_title='Talla en cm',
                    yaxis_title='Peso en kg',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= peso, y= talla, name= "Usuario", mode='lines+markers', line= dict(color= 'black') ))
+    fig.add_trace(go.Scatter(x= talla, y= peso, name= "Usuario", mode='lines+markers', line= dict(color= 'black') ))
 
-    return fig
+    return fig.show()
 #fig.show()
 
-analisis1 = grafico_crecimiento (dfniñas_entre_2_y_5_años, [14], [120])
- 
+analisis1= grafico_crecimiento (dfniñas_entre_2_y_5_años, [14], [110])  
+print (analisis1)
 #def analisis_BMI_mayores_5_años(df, edad, BMI)
