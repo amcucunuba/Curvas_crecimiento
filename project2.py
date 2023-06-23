@@ -22,8 +22,8 @@ dfniños_mayor_6_años =  pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio P
 
 #Datos que el usuario debe ingresar
 nombre = input("Ingrese el nombre de su bebé:  ")
-fecha_ingresada = input("Ingrese la fecha de nacimiento (DD/MM/AAAA): ")
-genero_ingresado = input("Ingrese el género, Femenino  F o Masculino M:  ")
+fecha_ingresada = input("Ingrese la fecha de nacimiento en cifras (DD/MM/AAAA): ")
+genero_ingresado = input("Ingrese el género en mayúscula, Femenino  F o Masculino M:  ")
 talla_ingresada = float(input("Ingrese la talla en cm:  "))
 peso_ingresado = float(input("Ingrese el peso en kg:  "))
 
@@ -92,7 +92,7 @@ def analisis_BMI_mayores_5_años(df, edad, BMI):
         elif columna_minima[0] == "SD2neg":
             interpretacion2 = "Delgadez, consulte su pediatra"
         elif columna_minima[0] == "SD1neg" or columna_minima[0] == "SD0":
-            interpretacion2 = "Adecuado"
+            interpretacion2 = "Adecuado IMC para la edad"
         elif columna_minima[0] == "SD1":
             interpretacion2 = "Riesgo de sobrepeso, esté alerta!!"
         elif columna_minima[0] == "SD2":
@@ -112,62 +112,66 @@ edad_uso = edad.years * 12
 #funcion para la grafica menores de 5 años
 def grafico_crecimiento1 (df, talla, peso):
     fig = go.Figure()
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
                       line=dict(color='red', width=2)))
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD2neg"], name= "SD2neg", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD2neg"], name= "SD2neg", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='red', width=2) ))
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD1neg"], name= "SD1neg", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD1neg"], name= "SD1neg", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='yellow', width=2)))
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD0"], name= "SD0", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD0"], name= "SD0", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='green', width=2)))
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD1"], name= "SD1",  fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD1"], name= "SD1",  fill= 'tonexty', hoverinfo='none',
                       line=dict(color='green', width=2)))
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD2"], name= "SD2", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD2"], name= "SD2", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='yellow', width=2)))
-    fig.add_trace(go.Line(x=df["Height"], y= df["SD3"], name= "SD3", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Height"], y= df["SD3"], name= "SD3", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='red', width=2,) ))
     fig.add_trace(go.Scatter(fillpattern= dict(bgcolor= 'white')))
     fig.update_layout(title='Curva de Crecimiento OMS',
                    xaxis_title='Talla en centimetros (cm)',
                    yaxis_title='Peso en kilogramos (kg)',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= talla, y= peso, name= "Usuario", mode='lines+markers', line= dict(color= 'black') ))
+    fig.add_trace(go.Scatter(x= talla, y= peso, name= nombre, mode='lines+markers', line= dict(color= 'black')))
+    #hovertemplate= dict("Talla cm:%{x}", "Peso kg:%{y}")
 
     return fig.show() 
 
 #funcion para la grafica mayores de 5 años
 def grafico_crecimiento2 (df, edad, IMC):
     fig = go.Figure()
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
                       line=dict(color='red', width=2)))
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD2neg"], name= "SD2neg", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD2neg"], name= "SD2neg", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='red', width=2) ))
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD1neg"], name= "SD1neg", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD1neg"], name= "SD1neg", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='yellow', width=2)))
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD0"], name= "SD0", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD0"], name= "SD0", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='green', width=2)))
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD1"], name= "SD1",  fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD1"], name= "SD1",  fill= 'tonexty', hoverinfo='none',
                       line=dict(color='green', width=2)))
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD2"], name= "SD2", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD2"], name= "SD2", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='yellow', width=2)))
-    fig.add_trace(go.Line(x=df["Month"], y= df["SD3"], name= "SD3", fill= 'tonexty', hoverinfo='none',
+    fig.add_trace(go.Scatter(x=df["Month"], y= df["SD3"], name= "SD3", fill= 'tonexty', hoverinfo='none',
                       line=dict(color='red', width=2,) ))
     fig.add_trace(go.Scatter(fillpattern= dict(bgcolor= 'white')))
     fig.update_layout(title='Curva de Crecimiento OMS',
                    xaxis_title='Edad en meses',
                    yaxis_title='Indice de Masa Corporal',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= edad, y= IMC, name= "Usuario", mode='lines+markers', line= dict(color= 'black') ))
+    fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black')))
+    #fig.update_layout(hovertemplate= ("Edad meses:%{x}", "IMC:%{y}"))
 
     return fig.show() 
 
-
+caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
 #la funcion que agrupa toda la información, evalua inicialmente la edad y el género para evitar estrellarse.
 #en la segunda parte evalua el genero y la edad, luego con la funcion, el df y las variables determinadas, hace el analisis. 
 # Por otro lado se ejecuta la grafica con las mismas variables 
 def analis_edad (genero, ed):   
-    if genero != "M" and "F" and ed > 216:
-        print ("Verifique el género ingresado y/o la fecha de nacimiento")
+    if genero != "M" and genero != "F":
+        print ("Verifique el género ingresado")
+    elif ed > 216 and ed in caracteres:
+        print ("Verifique la fecha de nacimiento")
     elif genero == 'M' and ed <24:
         return (analisis_talla_menores_5_años(dfniños_menor_2_años, talla_ingresada, peso_ingresado), 
                 grafico_crecimiento1(dfniños_menor_2_años,[talla_ingresada], [peso_ingresado]))
