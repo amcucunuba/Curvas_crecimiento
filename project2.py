@@ -158,10 +158,9 @@ def grafico_crecimiento2 (df, edad, IMC):
                    xaxis_title='Edad en meses',
                    yaxis_title='Indice de Masa Corporal',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black')))
-    #fig.update_layout(hovertemplate= ("Edad meses:%{x}", "IMC:%{y}"))
-
-    return fig.show() 
+    fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black'), hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
+    #fig.update_traces(hovertemplate= "Edad meses:%{edad}", "IMC:%{IMC}")
+    return fig.show()
 
 caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
 #la funcion que agrupa toda la información, evalua inicialmente la edad y el género para evitar estrellarse.
@@ -191,6 +190,6 @@ def analis_edad (genero, ed):
         return(analisis_BMI_mayores_5_años(dfniñas_mayor_6_años, edad_uso, (calcularBMI(peso_ingresado, talla_ingresada))),
                grafico_crecimiento2(dfniñas_mayor_6_años, [edad_uso], [(calcularBMI(peso_ingresado, talla_ingresada))]))
 
-analis_edad(genero_ingresado, edad_uso)       
+analis_edad(genero_ingresado, edad_uso)    
 
 
