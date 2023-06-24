@@ -132,13 +132,7 @@ def grafico_crecimiento1 (df, talla, peso):
                    yaxis_title='Peso en kilogramos (kg)',
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= talla, y= peso, name= nombre, mode='lines+markers', line= dict(color= 'black'),
-<<<<<<< HEAD
-                              hovertemplate= '<br>Talla: %{x} cm <br>Peso: %{y} kg'))
-=======
                               hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
-    #hovertemplate= dict("Talla cm:%{x}", "Peso kg:%{y}")
-
->>>>>>> 6aac1b35a02b4ccb539f3a60203bbdc8d9595adc
     return fig.show() 
 
 #funcion para la grafica mayores de 5 años
@@ -165,10 +159,6 @@ def grafico_crecimiento2 (df, edad, IMC):
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black'), 
                              hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
-<<<<<<< HEAD
-=======
-    #fig.update_traces(hovertemplate= "Edad meses:%{edad}", "IMC:%{IMC}")
->>>>>>> 6aac1b35a02b4ccb539f3a60203bbdc8d9595adc
     return fig.show()
 
 caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
@@ -200,4 +190,5 @@ def analis_edad (genero, ed):
                grafico_crecimiento2(dfniñas_mayor_6_años, [edad_uso], [(calcularBMI(peso_ingresado, talla_ingresada))]))
 
 analis_edad(genero_ingresado, edad_uso)    
+
 
