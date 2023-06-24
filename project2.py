@@ -6,19 +6,19 @@ from dateutil.relativedelta import relativedelta
 import plotly.graph_objects as go
 
 #Leer el archivo e importar en df
-dfniñas_menor_2_años = pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio Python\\wfl-girls-zscore-expanded-table.xlsx")
-dfniños_menor_2_años = pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio Python\\wfl-boys-zscore-expanded-table.xlsx")   
+dfniñas_menor_2_años = pd.read_excel("wfl-girls-zscore-expanded-table.xlsx")
+dfniños_menor_2_años = pd.read_excel("wfl-boys-zscore-expanded-table.xlsx")   
 
 #Cambiar el nombre de la columna de longitud a talla, como los demás df, solo
 # para los df menores de 2 años.
 dfniñas_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
 dfniños_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
 
-dfniñas_entre_2_y_5_años = pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio Python\\wfh-girls-zscore-2-a-5-anios.xlsx")
-dfniños_entre_2_y_5_años = pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio Python\\wfh-boys-zscore-2-a-5-anios.xlsx")
+dfniñas_entre_2_y_5_años = pd.read_excel("wfh-girls-zscore-2-a-5-anios.xlsx")
+dfniños_entre_2_y_5_años = pd.read_excel("wfh-boys-zscore-2-a-5-anios.xlsx")
 
-dfniñas_mayor_6_años =  pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio Python\\bmi-girls-z-who-2007-exp.xlsx")
-dfniños_mayor_6_años =  pd.read_excel("C:\\Users\\User\\Documents\\Ejercicio Python\\bmi-boys-z-who-2007-exp.xlsx")
+dfniñas_mayor_6_años =  pd.read_excel("bmi-girls-z-who-2007-exp.xlsx")
+dfniños_mayor_6_años =  pd.read_excel("bmi-boys-z-who-2007-exp.xlsx")
 
 #Datos que el usuario debe ingresar
 nombre = input("Ingrese el nombre de su bebé:  ")
@@ -131,9 +131,8 @@ def grafico_crecimiento1 (df, talla, peso):
                    xaxis_title='Talla en centimetros (cm)',
                    yaxis_title='Peso en kilogramos (kg)',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= talla, y= peso, name= nombre, mode='lines+markers', line= dict(color= 'black')))
-    #hovertemplate= dict("Talla cm:%{x}", "Peso kg:%{y}")
-
+    fig.add_trace(go.Scatter(x= talla, y= peso, name= nombre, mode='lines+markers', line= dict(color= 'black'),
+                              hovertemplate= '<br>Talla: %{x} cm <br>Peso: %{y} kg'))
     return fig.show() 
 
 #funcion para la grafica mayores de 5 años
@@ -158,8 +157,8 @@ def grafico_crecimiento2 (df, edad, IMC):
                    xaxis_title='Edad en meses',
                    yaxis_title='Indice de Masa Corporal',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black'), hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
-    #fig.update_traces(hovertemplate= "Edad meses:%{edad}", "IMC:%{IMC}")
+    fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black'), 
+                             hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
     return fig.show()
 
 caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
@@ -191,5 +190,4 @@ def analis_edad (genero, ed):
                grafico_crecimiento2(dfniñas_mayor_6_años, [edad_uso], [(calcularBMI(peso_ingresado, talla_ingresada))]))
 
 analis_edad(genero_ingresado, edad_uso)    
-
 
