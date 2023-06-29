@@ -5,34 +5,64 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import plotly.graph_objects as go
 
-#Leer el archivo e importar en df
-dfniñas_menor_2_años = pd.read_excel("wfl-girls-zscore-expanded-table.xlsx")
-dfniños_menor_2_años = pd.read_excel("wfl-boys-zscore-expanded-table.xlsx")   
+#Calcular la edad del bebé y determinar que DF usar. 
+#función para calcular la edad con base en la fecha de nacimiento que ingrese el usuario.
+def edad_meses (fecha):
+    fecha_nacimiento = datetime.strptime(fecha, "%d/%m/%Y")
+    edad = relativedelta(datetime.now(), fecha_nacimiento)
+#se multiplica por 12 (meses del año) porque los df estan con informacion en meses.
+    edad_uso = edad.years * 12
+    return edad_uso
 
+#Funcion que agrupa toda la información, evalua inicialmente la edad y el género para evitar estrellarse.
+#en la segunda parte evalua el genero y la edad, luego con la funcion, el df y las variables determinadas, hace el analisis. 
+# Por otro lado se ejecuta la grafica con las mismas variables 
+def analis_edad (genero, ed, talla, peso, nom):   
+    
+    dfniñas_menor_2_años = pd.read_excel("wfl-girls-zscore-expanded-table.xlsx")
+    dfniños_menor_2_años = pd.read_excel("wfl-boys-zscore-expanded-table.xlsx")   
 #Cambiar el nombre de la columna de longitud a talla, como los demás df, solo
 # para los df menores de 2 años.
-dfniñas_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
-dfniños_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
+    dfniñas_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
+    dfniños_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
 
-dfniñas_entre_2_y_5_años = pd.read_excel("wfh-girls-zscore-2-a-5-anios.xlsx")
-dfniños_entre_2_y_5_años = pd.read_excel("wfh-boys-zscore-2-a-5-anios.xlsx")
+    dfniñas_entre_2_y_5_años = pd.read_excel("wfh-girls-zscore-2-a-5-anios.xlsx")
+    dfniños_entre_2_y_5_años = pd.read_excel("wfh-boys-zscore-2-a-5-anios.xlsx")
+    
+    dfniñas_mayor_6_años =  pd.read_excel("bmi-girls-z-who-2007-exp.xlsx")
+    dfniños_mayor_6_años =  pd.read_excel("bmi-boys-z-who-2007-exp.xlsx")
+    caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                  'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
+   
+    if genero != "M" and genero != "F":
+        print ("Verifique el género ingresado")
+    elif ed > 216 and ed in caracteres:
+        print ("Verifique la fecha de nacimiento")
+    elif genero == 'M' and ed <24:
+        return (analisis_talla_menores_5_años(dfniños_menor_2_años, talla, peso, nom), 
+                grafico_crecimiento1(dfniños_menor_2_años,[talla], [peso],nom))
+    elif genero == 'M'and ed > 24 and ed <59:
+        return (analisis_talla_menores_5_años(dfniños_entre_2_y_5_años, talla, peso, nom), 
+                grafico_crecimiento1(dfniños_entre_2_y_5_años, [talla],[peso], nom ))
+    elif genero == 'M'and  ed > 60 and ed < 215:
+        return (analisis_BMI_mayores_5_años(dfniños_mayor_6_años, ed, (calcularBMI(peso, talla)), nom),
+                grafico_crecimiento2(dfniños_mayor_6_años,[ed],[(calcularBMI(peso, talla))]))
+    elif genero == 'F'and ed < 24:
+        return (analisis_talla_menores_5_años(dfniñas_menor_2_años, talla, peso, nom),
+                grafico_crecimiento1(dfniñas_menor_2_años,[talla], [peso], nom))
+    elif genero == 'F'and ed > 24 and ed <59:
+        return (analisis_talla_menores_5_años(dfniñas_entre_2_y_5_años, talla, peso, nom),
+                grafico_crecimiento1(dfniñas_menor_2_años, [talla], [peso], nom))
+    elif genero == 'F'and  ed > 60 and ed < 215:
+        return(analisis_BMI_mayores_5_años(dfniñas_mayor_6_años, ed, (calcularBMI(peso, talla)), nom),
+               grafico_crecimiento2(dfniñas_mayor_6_años, [ed], [(calcularBMI(peso, talla))],nom))
 
-dfniñas_mayor_6_años =  pd.read_excel("bmi-girls-z-who-2007-exp.xlsx")
-dfniños_mayor_6_años =  pd.read_excel("bmi-boys-z-who-2007-exp.xlsx")
-
-#Datos que el usuario debe ingresar
-nombre = input("Ingrese el nombre de su bebé:  ")
-fecha_ingresada = input("Ingrese la fecha de nacimiento en cifras (DD/MM/AAAA): ")
-genero_ingresado = input("Ingrese el género en mayúscula, Femenino  F o Masculino M:  ")
-talla_ingresada = float(input("Ingrese la talla en cm:  "))
-peso_ingresado = float(input("Ingrese el peso en kg:  "))
 
 #Definir la funcion de analisis de talla para menores de 5 años, 
 # dando el df, talla y peso.
 # La primer condición a evaluar es la talla, para evitar que el programa se estelle,
 
-
-def analisis_talla_menores_5_años(df, cm, peso):
+def analisis_talla_menores_5_años(df, cm, peso, usuario):
     if  cm < 45 or cm >120:
         print("Verifique los datos ingresados, fecha de nacimiento, talla en centimetros")
 #filtro del df deacuerdo a la talla ingresada por el usuario, iterando la serie lista de pesos
@@ -50,20 +80,20 @@ def analisis_talla_menores_5_años(df, cm, peso):
         if columna_minima[0] == "SD4neg":
             interpretacion = "Desnutrición Global Severa, Alerta!! Consulte su pediatra"
         elif columna_minima[0] == "SD3neg":
-            interpretacion = "Desnutrición Aguda Moderada, consulte su pediatra"
+            interpretacion = "Desnutrición Aguda Moderada, Alerta!! Consulte su pediatra"
         elif columna_minima[0] == "SD2neg":
-            interpretacion = "Desnutrición Aguda Moderada, consulte su pediatra"
+            interpretacion = "Desnutrición Aguda Moderada, Alerta!! Consulte su pediatra"
         elif columna_minima[0] == "SD1neg":
-            interpretacion = "Riesgo de desnutrición, consulte su pediatra"
+            interpretacion = "Riesgo de desnutrición. Consulte su pediatra"
         elif columna_minima[0] == "SD0" or columna_minima[0] == "SD1":
             interpretacion = "Adecuado peso para la talla"
         elif columna_minima[0] == "SD2":
             interpretacion = "Riesgo de sobrepeso, esté alerta!!"
         elif columna_minima[0] == "SD3":
-            interpretacion = "Sobrepeso, consulte su pediatra!!"
+            interpretacion = "Sobrepeso. Consulte su pediatra!!"
         else: 
-            interpretacion =  "Obesidad, consulte su pediatra!!"
-        print (nombre, interpretacion)
+            interpretacion =  "Obesidad. Consulte su pediatra!!"
+        print (usuario, interpretacion)
 
 #Para los niños mayores de 5 años, se calcula el indice de masa corporal (BMI) a partir del peso y la talla ingresada
 #el primer paso de la función es calcular el BMI, porque es necesario para evaluar el crecimiento.
@@ -72,7 +102,7 @@ def calcularBMI(p, a):
     return p / ((a * 0.01) * (a * 0.01))
 
 #Antes de hacer el analisis, se verifica la edad 
-def analisis_BMI_mayores_5_años(df, edad, BMI):
+def analisis_BMI_mayores_5_años(df, edad, BMI, usuario):
     if  edad < 60 or edad > 215:
         print("Verifique los datos ingresados, fecha de nacimiento")
 #filtro del df deacuerdo a la EDAD ingresa por el usuario, iterando la serie lista de BMI
@@ -88,29 +118,22 @@ def analisis_BMI_mayores_5_años(df, edad, BMI):
         if columna_minima[0] == "SD4neg":
             interpretacion2 = "Delgadez Severa, Alerta!! Consulte su pediatra"
         elif columna_minima[0] == "SD3neg":
-            interpretacion2 = "Delgadez Severa consulte su pediatra"
+            interpretacion2 = "Delgadez Severa. Consulte su pediatra"
         elif columna_minima[0] == "SD2neg":
-            interpretacion2 = "Delgadez, consulte su pediatra"
+            interpretacion2 = "Delgadez. Consulte su pediatra"
         elif columna_minima[0] == "SD1neg" or columna_minima[0] == "SD0":
             interpretacion2 = "Adecuado IMC para la edad"
         elif columna_minima[0] == "SD1":
             interpretacion2 = "Riesgo de sobrepeso, esté alerta!!"
         elif columna_minima[0] == "SD2":
-            interpretacion2 = "Sobrepeso, consulte su pediatra!!"
+            interpretacion2 = "Sobrepeso. Consulte su pediatra!!"
         else: 
-            interpretacion2 = "Obesidad, consulte su pediatra!!"
+            interpretacion2 = "Obesidad. Consulte su pediatra!!"
         
-        print (nombre, interpretacion2)
-
-#Calcular la edad del bebé y determinar que DF usar. 
-#función para calcular la edad con base en la fecha de nacimiento que ingrese el usuario.
-fecha_nacimiento = datetime.strptime(fecha_ingresada, "%d/%m/%Y")
-edad = relativedelta(datetime.now(), fecha_nacimiento)
-#se multiplica por 12 (meses del año) porque los df estan con informacion en meses.
-edad_uso = edad.years * 12
+        print (usuario, interpretacion2)
 
 #funcion para la grafica menores de 5 años
-def grafico_crecimiento1 (df, talla, peso):
+def grafico_crecimiento1 (df, talla, peso, usuario):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df["Height"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
                       line=dict(color='red', width=2)))
@@ -131,12 +154,12 @@ def grafico_crecimiento1 (df, talla, peso):
                    xaxis_title='Talla en centimetros (cm)',
                    yaxis_title='Peso en kilogramos (kg)',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= talla, y= peso, name= nombre, mode='lines+markers', line= dict(color= 'black'),
+    fig.add_trace(go.Scatter(x= talla, y= peso, name= usuario, mode='lines+markers', line= dict(color= 'black'),
                               hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
     return fig.show() 
 
 #funcion para la grafica mayores de 5 años
-def grafico_crecimiento2 (df, edad, IMC):
+def grafico_crecimiento2 (df, edad, IMC, usuario):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df["Month"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
                       line=dict(color='red', width=2)))
@@ -157,38 +180,7 @@ def grafico_crecimiento2 (df, edad, IMC):
                    xaxis_title='Edad en meses',
                    yaxis_title='Indice de Masa Corporal',
                    legend_title_text= 'Desviaciones Estándar')
-    fig.add_trace(go.Scatter(x= edad, y= IMC, name= nombre, mode='lines+markers', line= dict(color= 'black'), 
+    fig.add_trace(go.Scatter(x= edad, y= IMC, name= usuario, mode='lines+markers', line= dict(color= 'black'), 
                              hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
     return fig.show()
-
-caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
-#la funcion que agrupa toda la información, evalua inicialmente la edad y el género para evitar estrellarse.
-#en la segunda parte evalua el genero y la edad, luego con la funcion, el df y las variables determinadas, hace el analisis. 
-# Por otro lado se ejecuta la grafica con las mismas variables 
-def analis_edad (genero, ed):   
-    if genero != "M" and genero != "F":
-        print ("Verifique el género ingresado")
-    elif ed > 216 and ed in caracteres:
-        print ("Verifique la fecha de nacimiento")
-    elif genero == 'M' and ed <24:
-        return (analisis_talla_menores_5_años(dfniños_menor_2_años, talla_ingresada, peso_ingresado), 
-                grafico_crecimiento1(dfniños_menor_2_años,[talla_ingresada], [peso_ingresado]))
-    elif genero == 'M'and ed > 24 and ed <59:
-        return (analisis_talla_menores_5_años(dfniños_entre_2_y_5_años, talla_ingresada, peso_ingresado), 
-                grafico_crecimiento1(dfniños_entre_2_y_5_años, [talla_ingresada],[peso_ingresado] ))
-    elif genero == 'M'and  ed > 60 and ed < 215:
-        return (analisis_BMI_mayores_5_años(dfniños_mayor_6_años, edad_uso, (calcularBMI(peso_ingresado, talla_ingresada))),
-                grafico_crecimiento2(dfniños_mayor_6_años,[edad_uso],[(calcularBMI(peso_ingresado, talla_ingresada))]))
-    elif genero == 'F'and ed < 24:
-        return (analisis_talla_menores_5_años(dfniñas_menor_2_años, talla_ingresada, peso_ingresado),
-                grafico_crecimiento1(dfniñas_menor_2_años,[talla_ingresada], [peso_ingresado]))
-    elif genero == 'F'and ed > 24 and ed <59:
-        return (analisis_talla_menores_5_años(dfniñas_entre_2_y_5_años, talla_ingresada, peso_ingresado),
-                grafico_crecimiento1(dfniñas_menor_2_años, [talla_ingresada], [peso_ingresado]))
-    elif genero == 'F'and  ed > 60 and ed < 215:
-        return(analisis_BMI_mayores_5_años(dfniñas_mayor_6_años, edad_uso, (calcularBMI(peso_ingresado, talla_ingresada))),
-               grafico_crecimiento2(dfniñas_mayor_6_años, [edad_uso], [(calcularBMI(peso_ingresado, talla_ingresada))]))
-
-analis_edad(genero_ingresado, edad_uso)    
-
 
