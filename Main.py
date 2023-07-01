@@ -3,7 +3,7 @@ import numpy as np
 import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from Funcion import analis_edad
+from Funcion import analis_crecimiento
 from Funcion import edad_meses
 
 
@@ -16,4 +16,4 @@ talla_ingresada = float(input("Ingrese la talla en cm:  "))
 peso_ingresado = float(input("Ingrese el peso en kg:  "))
 
 
-analis_edad(genero_ingresado, edad_meses(fecha_ingresada), talla_ingresada, peso_ingresado, nombre)    
+analis_crecimiento (genero_ingresado, edad_meses(fecha_ingresada), talla_ingresada, peso_ingresado, nombre)    
