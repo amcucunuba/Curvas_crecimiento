@@ -14,18 +14,15 @@ def edad_meses (fecha):
     edad_uso = edad.years * 12
     return edad_uso
 
-#Se requiere la edad en días para los df de bmi y hfa
-edad_dias = edad_meses * 30
-
 # Esta funcion agrupa toda la información. Evalua inicialmente la edad y el género para evitar estrellarse.
 # Luego con los datos entregados de genero y edad evalua cual es el df acorde a los valores ingresados
 # Hace el analisis tomando talla, y peso
 # Para el BMI se hace el calculo con el dato de peso y talla
 # Por otro lado se ejecuta la grafica con las mismas variables 
-def analis_crecimiento (genero, ed, talla, peso, nom):   
+def analis_antropometrico (genero, ed, talla, peso, nom):   
 # Peso para la talla menores de 2 años    
-    df_wfl_niñas_menor_2_años = pd.read_excel("wfl-girls-zscore-expanded-table.xlsx")
-    df_wfl_niños_menor_2_años = pd.read_excel("wfl-boys-zscore-expanded-table.xlsx")   
+    df_wfl_niñas_menor_2_años = pd.read_excel("wfl-girls-zscore-expanded-table-0-a-2-anios.xlsx")
+    df_wfl_niños_menor_2_años = pd.read_excel("wfl-boys-zscore-expanded-table-0-a-2-anios.xlsx")   
 # Cambiar el nombre de la columna de longitud a talla, como los demás df, solo
 # para los df menores de 2 años.
     df_wfl_niñas_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
@@ -36,54 +33,82 @@ def analis_crecimiento (genero, ed, talla, peso, nom):
 # Peso para la edad de 0 a 5 años
     df_wfa_niñas_entre_0_y_5_años = pd.read_excel("wfa-girls-zscore-expanded-tables_0_a_5anios.xlsx")
     df_wfa_niños_entre_0_y_5_años = pd.read_excel("wfa-boys-zscore-expanded-tables_0_a_5_anios.xlsx")
+# Cambio de unidad de medida en la edad, pasó de dias a meses 
+# Cambio en el mombre de la columna    
+    df_wfa_niñas_entre_0_y_5_años["Day"] = df_wfa_niñas_entre_0_y_5_años["Day"] / 30
+    df_wfa_niñas_entre_0_y_5_años.rename( columns={"Day" : "Month"}, inplace= True)
+    
+    df_wfa_niños_entre_0_y_5_años["Day"] = df_wfa_niños_entre_0_y_5_años["Day"] / 30
+    df_wfa_niños_entre_0_y_5_años.rename( columns={"Day" : "Month"}, inplace= True)
+
 # Peso para la edad 5 a 10 años 
     df_wfa_niñas_entre_6_y_10_años = pd.read_excel("wfa-girls-z-who-2007-exp_5-a-10-anios.xlsx")
     df_wfa_niños_entre_6_y_10_años = pd.read_excel("wfa-boys-z-who-2007-exp_5-a-10-anios.xlsx")
 # Talla para la edad 0 a 5 años 
-    df_hfa_ninas_5_a_18_anios = pd.read_excel("hfa-girls-zscore-expanded-tables-0-a-5-anios.xlsx")
-    df_hfa_ninos_5_a_18_anios = pd.read_excel("hfa-boys-zscore-expanded-tables-0-a-5-anios.xlsx")
+    df_hfa_ninas_0_a_5_anios = pd.read_excel("hfa-girls-zscore-expanded-tables-0-a-5-anios.xlsx")
+    df_hfa_ninos_0_a_5_anios = pd.read_excel("hfa-boys-zscore-expanded-tables-0-a-5-anios.xlsx")
+# Cambio de unidad de medida en la edad, pasó de dias a meses 
+# Cambio en el mombre de la columna    
+    df_hfa_ninas_0_a_5_anios["Day"] = df_hfa_ninas_0_a_5_anios["Day"] / 30
+    df_hfa_ninas_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
+    df_hfa_ninos_0_a_5_anios["Day"] = df_hfa_ninos_0_a_5_anios["Day"] / 30
+    df_hfa_ninos_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
 # Talla para la edad 5 a 18 años
     df_hfa_ninas_5_a_18_anios = pd.read_excel("hfa-girls-z-who-2007-exp-5-a18-anios.xlsx")
     df_hfa_ninos_5_a_18_anios = pd.read_excel("hfa-boys-z-who-2007-exp-5-a-18anios.xlsx")
 # BMI para la edad de 0 a 5 años 
-    df_bmi_ninas_0_a_5_anios = pd.read_excel("bmifa-boys-zscore-expanded-tables-0-5anios.xlsx")
+    df_bmi_ninas_0_a_5_anios = pd.read_excel("bmifa-girls-zscore-expanded-tables_0a_5_anios.xlsx")
     df_bmi_ninos_0_a_5_anios = pd.read_excel("bmifa-boys-zscore-expanded-tables-0-5anios.xlsx")
 
 # Cambio de unidad de medida en la edad, pasó de dias a meses 
 # Cambio en el mombre de la columna    
     df_bmi_ninas_0_a_5_anios["Day"] = df_bmi_ninas_0_a_5_anios["Day"] / 30
     df_bmi_ninas_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
-    
+    df_bmi_ninos_0_a_5_anios["Day"] = df_bmi_ninos_0_a_5_anios["Day"] / 30
+    df_bmi_ninos_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
 # BMI para la edad de 5 a 18 años 
-    df_bmi_niñas_mayor_6_años =  pd.read_excel("bmi-girls-z-who-2007-exp.xlsx")
-    df_bmi_niños_mayor_6_años =  pd.read_excel("bmi-boys-z-who-2007-exp.xlsx")    
+    df_bmi_niñas_mayor_6_años =  pd.read_excel("bmi-girls-z-who-2007-exp-5-a-18-anios.xlsx")
+    df_bmi_niños_mayor_6_años =  pd.read_excel("bmi-boys-z-who-2007-exp-5-a18-anios.xlsx")    
     
-    caracteres = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
-                  'm', 'n,' 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z')
 # Evaluación de genero   
     if genero != "M" and genero != "F":
         print ("Verifique el género ingresado")
-    elif ed > 216 and ed in caracteres:
-        print ("Verifique la fecha de nacimiento")
 # Inicia el analisis de datos    
     elif genero == 'M' and ed <24:
-        return (analisis_peso_talla_menores_5_años(df_wfl_niños_menor_2_años, talla, peso, nom), 
-                grafico_crecimiento1(df_wfl_niños_menor_2_años,[talla], [peso],nom))
+        return (analisis_peso_talla_menores_5_años((df_wfl_niños_menor_2_años), talla, peso, nom), 
+                grafico_crecimiento_1(df_wfl_niños_menor_2_años[talla], [peso],nom),
+                analisis_crecimiento (df_hfa_ninos_0_a_5_anios, ed, talla, nom, 1),
+                analisis_crecimiento (df_wfa_niños_entre_0_y_5_años, ed, peso, nom, 2),
+                analisis_crecimiento (df_bmi_ninos_0_a_5_anios, ed, (calcularBMI(peso, talla)), nom, 3))
     elif genero == 'M'and ed > 24 and ed <59:
         return (analisis_peso_talla_menores_5_años(df_wfh_niños_entre_2_y_5_años, talla, peso, nom), 
-                grafico_crecimiento1(df_wfh_niños_entre_2_y_5_años, [talla],[peso], nom ))
+                grafico_crecimiento_1(df_wfh_niños_entre_2_y_5_años, [talla],[peso], nom ),
+                analisis_crecimiento (df_hfa_ninos_0_a_5_anios, ed, talla, nom, 1),
+                analisis_crecimiento (df_wfa_niños_entre_0_y_5_años, ed, peso, nom, 2),
+                analisis_crecimiento(df_bmi_ninos_0_a_5_anios, ed, (calcularBMI(peso, talla)), nom,3))
     elif genero == 'M'and  ed > 60 and ed < 215:
-        return (analisis_BMI_mayores_5_años(df_bmi_niños_mayor_6_años, ed, (calcularBMI(peso, talla)), nom),
-                grafico_crecimiento2(df_bmi_niños_mayor_6_años,[ed],[(calcularBMI(peso, talla))]))
+        return (analisis_crecimiento(df_bmi_niños_mayor_6_años, ed, (calcularBMI(peso, talla)), nom, 3),
+                grafico_crecimiento2(df_bmi_niños_mayor_6_años,[ed],[(calcularBMI(peso, talla))], nom),
+                analisis_crecimiento (df_hfa_ninos_5_a_18_anios, ed, talla, nom, 1),
+                analisis_crecimiento (df_wfa_niños_entre_6_y_10_años, ed, peso, nom, 2))
     elif genero == 'F'and ed < 24:
         return (analisis_peso_talla_menores_5_años(df_wfl_niñas_menor_2_años, talla, peso, nom),
-                grafico_crecimiento1(df_wfl_niñas_menor_2_años,[talla], [peso], nom))
+                grafico_crecimiento_1(df_wfl_niñas_menor_2_años,[talla], [peso], nom),
+                analisis_crecimiento (df_hfa_ninas_0_a_5_anios, ed, talla, nom, 1),
+                analisis_crecimiento (df_wfa_niñas_entre_0_y_5_años, ed, peso, nom, 2),
+                analisis_crecimiento(df_bmi_ninas_0_a_5_anios, ed, (calcularBMI(peso, talla)), nom, 3))
     elif genero == 'F'and ed > 24 and ed <59:
         return (analisis_peso_talla_menores_5_años(df_wfh_niñas_entre_2_y_5_años, talla, peso, nom),
-                grafico_crecimiento1(df_wfh_niñas_entre_2_y_5_años, [talla], [peso], nom))
+                grafico_crecimiento_1(df_wfh_niñas_entre_2_y_5_años, [talla], [peso], nom),
+                analisis_crecimiento (df_hfa_ninas_0_a_5_anios, ed, talla, nom, 1),
+                analisis_crecimiento (df_wfa_niñas_entre_0_y_5_años, ed, peso, nom, 2),
+                analisis_crecimiento(df_bmi_ninas_0_a_5_anios, ed, (calcularBMI(peso, talla)), nom, 3))
     elif genero == 'F'and  ed > 60 and ed < 215:
-        return(analisis_BMI_mayores_5_años(df_bmi_niñas_mayor_6_años, ed, (calcularBMI(peso, talla)), nom),
-               grafico_crecimiento2(df_bmi_niñas_mayor_6_años, [ed], [(calcularBMI(peso, talla))],nom))
+        return (analisis_crecimiento(df_bmi_niñas_mayor_6_años, ed, (calcularBMI(peso, talla)), nom, 3),
+               grafico_crecimiento2(df_bmi_niñas_mayor_6_años, [ed], [(calcularBMI(peso, talla))],nom),
+               analisis_crecimiento (df_wfa_niñas_entre_6_y_10_años, ed, peso, nom, 2),
+               analisis_crecimiento (df_hfa_ninas_5_a_18_anios, ed, talla, nom, 1))
+
 
 # Definir la funcion de analisis de talla para menores de 5 años, 
 # dando el df, talla y peso.
@@ -122,45 +147,53 @@ def analisis_peso_talla_menores_5_años(df, cm, peso, usuario):
             interpretacion =  "Obesidad. Consulte su pediatra!!"
         print (usuario, interpretacion)
 
-#Para los niños mayores de 5 años, se calcula el indice de masa corporal (BMI) a partir del peso y la talla ingresada
+
+#Para los niños se calcula el indice de masa corporal (BMI) a partir del peso y la talla ingresada
 #el primer paso de la función es calcular el BMI, porque es necesario para evaluar el crecimiento.
 
 def calcularBMI(p, a):
     return p / ((a * 0.01) * (a * 0.01))
 
 #Antes de hacer el analisis, se verifica la edad 
-def analisis_BMI_mayores_5_años(df, edad, BMI, usuario):
-    if  edad < 60 or edad > 215:
+def analisis_crecimiento (df, edad, indicador, usuario, tipo_analisis):
+    abc = 0
+    if tipo_analisis == 1:
+        abc = "Talla" 
+    elif tipo_analisis == 2:
+        abc = "Peso"
+    else:
+        abc = "IMC"
+
+
+    if  edad > 215:
         print("Verifique los datos ingresados, fecha de nacimiento")
-#filtro del df deacuerdo a la EDAD ingresa por el usuario, iterando la serie lista de BMI
-#La función busca para la edad ingresada, el BMI más cercano en la lista de la serie de datos 
+#filtro del df deacuerdo a la EDAD ingresa por el usuario, iterando la serie lista del indicador antropometrico
+# Puede ser, talla, peso o BMI
+# La función busca para la edad ingresada, el BMI más cercano en la lista de la serie de datos 
 # y devuelve el nombre de la columna, que luego es interpretada de acuerdo a la ley 2121 de 2010.
     else:      
         filtro1= df[(df["Month"] == edad)]  
-        encontrar_BMI_lista = (filtro1.loc[:,['SD4neg','SD3neg','SD2neg', 'SD1neg', 'SD0','SD1', 'SD2','SD3','SD4']])
-        diferencias = abs(encontrar_BMI_lista - BMI)
+        encontrar_indicador_lista = (filtro1.loc[:,['SD4neg','SD3neg','SD2neg', 'SD1neg', 'SD0','SD1', 'SD2','SD3','SD4']])
+        diferencias = abs(encontrar_indicador_lista - indicador)
         BMI_minimo = diferencias.min(axis=1)
         columna_minima = list(diferencias.idxmin(axis=1))
         
-        if columna_minima[0] == "SD4neg":
-            interpretacion2 = "Delgadez Severa, Alerta!! Consulte su pediatra"
-        elif columna_minima[0] == "SD3neg":
-            interpretacion2 = "Delgadez Severa. Consulte su pediatra"
+        if columna_minima[0] == "SD4neg" or columna_minima[0] == "SD3neg" :
+            interpretacion2 = "Alerta!! Consulte su pediatra"
         elif columna_minima[0] == "SD2neg":
-            interpretacion2 = "Delgadez. Consulte su pediatra"
+            interpretacion2 = "Riesgo !. Consulte su pediatra"
         elif columna_minima[0] == "SD1neg" or columna_minima[0] == "SD0":
-            interpretacion2 = "Adecuado IMC para la edad"
+            interpretacion2 = "Adecuado para la edad"
         elif columna_minima[0] == "SD1":
-            interpretacion2 = "Riesgo de sobrepeso, esté alerta!!"
-        elif columna_minima[0] == "SD2":
-            interpretacion2 = "Sobrepeso. Consulte su pediatra!!"
+            interpretacion2 = "Riesgo, esté alerta!!"
         else: 
-            interpretacion2 = "Obesidad. Consulte su pediatra!!"
+            interpretacion2 = "Alerta Consulte su pediatra!!"
         
-        print (usuario, interpretacion2)
+        print (f" {usuario} tiene {abc} {interpretacion2}")
+
 
 #funcion para la grafica menores de 5 años
-def grafico_crecimiento1 (df, talla, peso, usuario):
+def grafico_crecimiento_1 (df, talla, peso, usuario):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df["Height"], y= df["SD3neg"], name= "SD3neg", hoverinfo='none',
                       line=dict(color='red', width=2)))
@@ -182,7 +215,7 @@ def grafico_crecimiento1 (df, talla, peso, usuario):
                    yaxis_title='Peso en kilogramos (kg)',
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= talla, y= peso, name= usuario, mode='lines+markers', line= dict(color= 'black'),
-                              hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
+                              hovertemplate= '<br>Edad: %{x} meses <br>Peso: %{y} kg'))
     return fig.show() 
 
 #funcion para la grafica mayores de 5 años
