@@ -17,3 +17,4 @@ peso_ingresado = float(input("Ingrese el peso en kg:  "))
 
 
 analis_antropometrico (genero_ingresado, edad_meses(fecha_ingresada), talla_ingresada, peso_ingresado, nombre)    
+print ("La edad en meses es", (edad_meses(fecha_ingresada)))

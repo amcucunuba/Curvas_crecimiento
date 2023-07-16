@@ -11,7 +11,7 @@ def edad_meses (fecha):
     fecha_nacimiento = datetime.strptime(fecha, "%d/%m/%Y")
     edad = relativedelta(datetime.now(), fecha_nacimiento)
 #se multiplica por 12 (meses del año) porque los df estan con informacion en meses.
-    edad_uso = edad.years * 12
+    edad_uso = edad.months
     return edad_uso
 
 # Esta funcion agrupa toda la información. Evalua inicialmente la edad y el género para evitar estrellarse.
@@ -37,7 +37,7 @@ def analis_antropometrico (genero, ed, talla, peso, nom):
 # Cambio en el mombre de la columna    
     df_wfa_niñas_entre_0_y_5_años["Day"] = df_wfa_niñas_entre_0_y_5_años["Day"] / 30
     df_wfa_niñas_entre_0_y_5_años.rename( columns={"Day" : "Month"}, inplace= True)
-    
+
     df_wfa_niños_entre_0_y_5_años["Day"] = df_wfa_niños_entre_0_y_5_años["Day"] / 30
     df_wfa_niños_entre_0_y_5_años.rename( columns={"Day" : "Month"}, inplace= True)
 
@@ -51,6 +51,7 @@ def analis_antropometrico (genero, ed, talla, peso, nom):
 # Cambio en el mombre de la columna    
     df_hfa_ninas_0_a_5_anios["Day"] = df_hfa_ninas_0_a_5_anios["Day"] / 30
     df_hfa_ninas_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
+
     df_hfa_ninos_0_a_5_anios["Day"] = df_hfa_ninos_0_a_5_anios["Day"] / 30
     df_hfa_ninos_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
 # Talla para la edad 5 a 18 años
@@ -64,6 +65,7 @@ def analis_antropometrico (genero, ed, talla, peso, nom):
 # Cambio en el mombre de la columna    
     df_bmi_ninas_0_a_5_anios["Day"] = df_bmi_ninas_0_a_5_anios["Day"] / 30
     df_bmi_ninas_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
+
     df_bmi_ninos_0_a_5_anios["Day"] = df_bmi_ninos_0_a_5_anios["Day"] / 30
     df_bmi_ninos_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
 # BMI para la edad de 5 a 18 años 
@@ -134,10 +136,8 @@ def analisis_peso_talla_menores_5_años(df, cm, peso, usuario):
         elif columna_minima[0] == "SD3neg":
             interpretacion = "Desnutrición Aguda Moderada, Alerta!! Consulte su pediatra"
         elif columna_minima[0] == "SD2neg":
-            interpretacion = "Desnutrición Aguda Moderada, Alerta!! Consulte su pediatra"
-        elif columna_minima[0] == "SD1neg":
             interpretacion = "Riesgo de desnutrición. Consulte su pediatra"
-        elif columna_minima[0] == "SD0" or columna_minima[0] == "SD1":
+        elif columna_minima[0] == "SD1neg" or columna_minima[0] == "SD0" or columna_minima[0] == "SD1":
             interpretacion = "Adecuado peso para la talla"
         elif columna_minima[0] == "SD2":
             interpretacion = "Riesgo de sobrepeso, esté alerta!!"
@@ -177,19 +177,21 @@ def analisis_crecimiento (df, edad, indicador, usuario, tipo_analisis):
         diferencias = abs(encontrar_indicador_lista - indicador)
         BMI_minimo = diferencias.min(axis=1)
         columna_minima = list(diferencias.idxmin(axis=1))
-        
+        print(columna_minima)
         if columna_minima[0] == "SD4neg" or columna_minima[0] == "SD3neg" :
             interpretacion2 = "Alerta!! Consulte su pediatra"
-        elif columna_minima[0] == "SD2neg":
+        elif columna_minima[0] == "SD2neg" or columna_minima[0] == "SD1neg" :
             interpretacion2 = "Riesgo !. Consulte su pediatra"
-        elif columna_minima[0] == "SD1neg" or columna_minima[0] == "SD0":
+        elif columna_minima[0] == "SD0":
             interpretacion2 = "Adecuado para la edad"
         elif columna_minima[0] == "SD1":
+            interpretacion2 = "Adecuado. Comparar con datos anteriores"
+        elif columna_minima[0] == "SD2" or columna_minima[0] == "SD3":
             interpretacion2 = "Riesgo, esté alerta!!"
         else: 
             interpretacion2 = "Alerta Consulte su pediatra!!"
         
-        print (f" {usuario} tiene {abc} {interpretacion2}")
+        print (f"{usuario} tiene {abc} con {interpretacion2}")
 
 
 #funcion para la grafica menores de 5 años
@@ -215,7 +217,7 @@ def grafico_crecimiento_1 (df, talla, peso, usuario):
                    yaxis_title='Peso en kilogramos (kg)',
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= talla, y= peso, name= usuario, mode='lines+markers', line= dict(color= 'black'),
-                              hovertemplate= '<br>Edad: %{x} meses <br>Peso: %{y} kg'))
+                              hovertemplate= '<br>Talla: %{x} cm <br>Peso: %{y} kg'))
     return fig.show() 
 
 #funcion para la grafica mayores de 5 años
