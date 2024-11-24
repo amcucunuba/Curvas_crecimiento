@@ -1,4 +1,7 @@
 streamlit
+fastapi ==0.108.0
+uvicorn         # web server
+httpx  # tests
 ansi2html==1.8.0
 anyio==3.6.1
 argon2-cffi==21.3.0

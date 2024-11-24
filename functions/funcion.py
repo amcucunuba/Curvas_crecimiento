@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 #Calcular la edad del usurio y determinar que DF usar. 
 #función para calcular la edad con la fecha de nacimiento que ingrese el usuario.
 def edad_meses (fecha):
-    #fecha_nacimiento = datetime.strptime(fecha, "%d/%m/%Y")
+    fecha_nacimiento = datetime.strptime(fecha, "%d/%m/%Y")
     edad = relativedelta(datetime.now(), fecha)
 #se multiplica por 12 (meses del año) porque los df estan con informacion en meses.
     edad_uso = edad.months
