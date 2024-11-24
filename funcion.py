@@ -4,6 +4,8 @@ import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import plotly.graph_objects as go
+import io
+import base64
 
 #Calcular la edad del usurio y determinar que DF usar. 
 #función para calcular la edad con la fecha de nacimiento que ingrese el usuario.
@@ -145,7 +147,7 @@ def analisis_peso_talla_menores_5_años(df, cm, peso, usuario):
             interpretacion = "Sobrepeso. Consulte su pediatra!!"
         else: 
             interpretacion =  "Obesidad. Consulte su pediatra!!"
-        print (usuario, interpretacion)
+    return(usuario, interpretacion)
 
 
 #Para los niños se calcula el indice de masa corporal (BMI) a partir del peso y la talla ingresada
@@ -191,7 +193,7 @@ def analisis_crecimiento (df, edad, indicador, usuario, tipo_analisis):
         else: 
             interpretacion2 = "Alerta Consulte su pediatra!!"
         
-        print (f"{usuario} tiene {abc} con {interpretacion2}")
+    return(f"{usuario} tiene {abc} con {interpretacion2}")
 
 
 #funcion para la grafica menores de 5 años
@@ -218,7 +220,10 @@ def grafico_crecimiento_1 (df, talla, peso, usuario):
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= talla, y= peso, name= usuario, mode='lines+markers', line= dict(color= 'black'),
                               hovertemplate= '<br>Talla: %{x} cm <br>Peso: %{y} kg'))
-    return fig.show() 
+    
+    fig_html = fig.to_html(full_html=False)
+
+    return fig_html 
 
 #funcion para la grafica mayores de 5 años
 def grafico_crecimiento2 (df, edad, IMC, usuario):
@@ -244,5 +249,8 @@ def grafico_crecimiento2 (df, edad, IMC, usuario):
                    legend_title_text= 'Desviaciones Estándar')
     fig.add_trace(go.Scatter(x= edad, y= IMC, name= usuario, mode='lines+markers', line= dict(color= 'black'), 
                              hovertemplate= '<br>Edad: %{x} meses <br>IMC: %{y}'))
-    return fig.show()
+    
+    fig_html = fig.to_html(full_html=False)
+
+    return fig_html 
 

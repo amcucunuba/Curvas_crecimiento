@@ -3,8 +3,7 @@ import numpy as np
 import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from Funcion import analis_antropometrico
-from Funcion import edad_meses
+from funcion import analis_antropometrico, edad_meses
 
 
 

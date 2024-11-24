@@ -3,7 +3,7 @@ import datetime
 import requests
 import pandas as pd
 #from Main import analis_antropometrico
-from Funcion import edad_meses, analis_antropometrico
+from funcion import edad_meses, analis_antropometrico
 
 st.markdown("""
     # Baby Growth Chart Calculator
