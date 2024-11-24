@@ -8,8 +8,8 @@ import plotly.graph_objects as go
 #Calcular la edad del usurio y determinar que DF usar. 
 #función para calcular la edad con la fecha de nacimiento que ingrese el usuario.
 def edad_meses (fecha):
-    fecha_nacimiento = datetime.strptime(fecha, "%d/%m/%Y")
-    edad = relativedelta(datetime.now(), fecha_nacimiento)
+    #fecha_nacimiento = datetime.strptime(fecha, "%d/%m/%Y")
+    edad = relativedelta(datetime.now(), fecha)
 #se multiplica por 12 (meses del año) porque los df estan con informacion en meses.
     edad_uso = edad.months
     return edad_uso
@@ -21,18 +21,18 @@ def edad_meses (fecha):
 # Por otro lado se ejecuta la grafica con las mismas variables 
 def analis_antropometrico (genero, ed, talla, peso, nom):   
 # Peso para la talla menores de 2 años    
-    df_wfl_niñas_menor_2_años = pd.read_excel("wfl-girls-zscore-expanded-table-0-a-2-anios.xlsx")
-    df_wfl_niños_menor_2_años = pd.read_excel("wfl-boys-zscore-expanded-table-0-a-2-anios.xlsx")   
+    df_wfl_niñas_menor_2_años = pd.read_excel("data/wfl-girls-zscore-expanded-table-0-a-2-anios.xlsx")
+    df_wfl_niños_menor_2_años = pd.read_excel("data/wfl-boys-zscore-expanded-table-0-a-2-anios.xlsx")   
 # Cambiar el nombre de la columna de longitud a talla, como los demás df, solo
 # para los df menores de 2 años.
     df_wfl_niñas_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
     df_wfl_niños_menor_2_años.rename( columns={"Length": "Height"}, inplace=True)
 # Peso para la talla menores de 5 años
-    df_wfh_niñas_entre_2_y_5_años = pd.read_excel("wfh-girls-zscore-2-a-5-anios.xlsx")
-    df_wfh_niños_entre_2_y_5_años = pd.read_excel("wfh-boys-zscore-2-a-5-anios.xlsx")
+    df_wfh_niñas_entre_2_y_5_años = pd.read_excel("data/wfh-girls-zscore-2-a-5-anios.xlsx")
+    df_wfh_niños_entre_2_y_5_años = pd.read_excel("data/wfh-boys-zscore-2-a-5-anios.xlsx")
 # Peso para la edad de 0 a 5 años
-    df_wfa_niñas_entre_0_y_5_años = pd.read_excel("wfa-girls-zscore-expanded-tables_0_a_5anios.xlsx")
-    df_wfa_niños_entre_0_y_5_años = pd.read_excel("wfa-boys-zscore-expanded-tables_0_a_5_anios.xlsx")
+    df_wfa_niñas_entre_0_y_5_años = pd.read_excel("data/wfa-girls-zscore-expanded-tables_0_a_5anios.xlsx")
+    df_wfa_niños_entre_0_y_5_años = pd.read_excel("data/wfa-boys-zscore-expanded-tables_0_a_5_anios.xlsx")
 # Cambio de unidad de medida en la edad, pasó de dias a meses 
 # Cambio en el mombre de la columna    
     df_wfa_niñas_entre_0_y_5_años["Day"] = df_wfa_niñas_entre_0_y_5_años["Day"] / 30
@@ -42,11 +42,11 @@ def analis_antropometrico (genero, ed, talla, peso, nom):
     df_wfa_niños_entre_0_y_5_años.rename( columns={"Day" : "Month"}, inplace= True)
 
 # Peso para la edad 5 a 10 años 
-    df_wfa_niñas_entre_6_y_10_años = pd.read_excel("wfa-girls-z-who-2007-exp_5-a-10-anios.xlsx")
-    df_wfa_niños_entre_6_y_10_años = pd.read_excel("wfa-boys-z-who-2007-exp_5-a-10-anios.xlsx")
+    df_wfa_niñas_entre_6_y_10_años = pd.read_excel("data/wfa-girls-z-who-2007-exp_5-a-10-anios.xlsx")
+    df_wfa_niños_entre_6_y_10_años = pd.read_excel("data/wfa-boys-z-who-2007-exp_5-a-10-anios.xlsx")
 # Talla para la edad 0 a 5 años 
-    df_hfa_ninas_0_a_5_anios = pd.read_excel("hfa-girls-zscore-expanded-tables-0-a-5-anios.xlsx")
-    df_hfa_ninos_0_a_5_anios = pd.read_excel("hfa-boys-zscore-expanded-tables-0-a-5-anios.xlsx")
+    df_hfa_ninas_0_a_5_anios = pd.read_excel("data/hfa-girls-zscore-expanded-tables-0-a-5-anios.xlsx")
+    df_hfa_ninos_0_a_5_anios = pd.read_excel("data/hfa-boys-zscore-expanded-tables-0-a-5-anios.xlsx")
 # Cambio de unidad de medida en la edad, pasó de dias a meses 
 # Cambio en el mombre de la columna    
     df_hfa_ninas_0_a_5_anios["Day"] = df_hfa_ninas_0_a_5_anios["Day"] / 30
@@ -55,11 +55,11 @@ def analis_antropometrico (genero, ed, talla, peso, nom):
     df_hfa_ninos_0_a_5_anios["Day"] = df_hfa_ninos_0_a_5_anios["Day"] / 30
     df_hfa_ninos_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
 # Talla para la edad 5 a 18 años
-    df_hfa_ninas_5_a_18_anios = pd.read_excel("hfa-girls-z-who-2007-exp-5-a18-anios.xlsx")
-    df_hfa_ninos_5_a_18_anios = pd.read_excel("hfa-boys-z-who-2007-exp-5-a-18anios.xlsx")
+    df_hfa_ninas_5_a_18_anios = pd.read_excel("data/hfa-girls-z-who-2007-exp-5-a18-anios.xlsx")
+    df_hfa_ninos_5_a_18_anios = pd.read_excel("data/hfa-boys-z-who-2007-exp-5-a-18anios.xlsx")
 # BMI para la edad de 0 a 5 años 
-    df_bmi_ninas_0_a_5_anios = pd.read_excel("bmifa-girls-zscore-expanded-tables_0a_5_anios.xlsx")
-    df_bmi_ninos_0_a_5_anios = pd.read_excel("bmifa-boys-zscore-expanded-tables-0-5anios.xlsx")
+    df_bmi_ninas_0_a_5_anios = pd.read_excel("data/bmifa-girls-zscore-expanded-tables_0a_5_anios.xlsx")
+    df_bmi_ninos_0_a_5_anios = pd.read_excel("data/bmifa-boys-zscore-expanded-tables-0-5anios.xlsx")
 
 # Cambio de unidad de medida en la edad, pasó de dias a meses 
 # Cambio en el mombre de la columna    
@@ -69,8 +69,8 @@ def analis_antropometrico (genero, ed, talla, peso, nom):
     df_bmi_ninos_0_a_5_anios["Day"] = df_bmi_ninos_0_a_5_anios["Day"] / 30
     df_bmi_ninos_0_a_5_anios.rename( columns={"Day" : "Month"}, inplace= True)
 # BMI para la edad de 5 a 18 años 
-    df_bmi_niñas_mayor_6_años =  pd.read_excel("bmi-girls-z-who-2007-exp-5-a-18-anios.xlsx")
-    df_bmi_niños_mayor_6_años =  pd.read_excel("bmi-boys-z-who-2007-exp-5-a18-anios.xlsx")    
+    df_bmi_niñas_mayor_6_años =  pd.read_excel("data/bmi-girls-z-who-2007-exp-5-a-18-anios.xlsx")
+    df_bmi_niños_mayor_6_años =  pd.read_excel("data/bmi-boys-z-who-2007-exp-5-a18-anios.xlsx")    
     
 # Evaluación de genero   
     if genero != "M" and genero != "F":
